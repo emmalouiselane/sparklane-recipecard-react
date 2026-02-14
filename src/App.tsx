@@ -101,9 +101,10 @@ function App() {
         <div className="usage-section">
           <h2>Installation & Usage</h2>
           <div className="code-block">
-            <pre>{`npm install sparklane-recipecard-react
+            <pre>{`npm --% install @sparklane.dev/sparklane-recipecard-react
 
-import RecipeCard from 'sparklane-recipecard-react';
+
+import RecipeCard from '@sparklane.dev/sparklane-recipecard-react';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 {
   "name": "@sparklane.dev/sparklane-recipecard-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A reusable React component for displaying recipe cards with name, image, and rating",
   "main": "dist/index.js",
   "module": "dist/index.js",
