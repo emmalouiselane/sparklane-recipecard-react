@@ -33,27 +33,19 @@ const isValidImageUrl = (url: string): boolean => {
 
 // Helper function to get the correct fallback image path
 const getFallbackImagePath = (): string => {
-  // For development, use the public folder path
+  // For development, use public folder path
   if (process.env.NODE_ENV === 'development') {
     return '/no-image.jpg';
   }
   
-  // For production, try multiple fallback strategies
-  const fallbackDataUri = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=';
-  
-  // Try to use the bundled image if available (safe static import)
+  // For production, use the bundled image from node_modules
   try {
-    // Check if we're in a browser environment
-    if (typeof window !== 'undefined') {
-      // Try to construct the path to the bundled image
-      const bundledImagePath = new URL('../dist/no-image.jpg', import.meta.url).href;
-      return bundledImagePath;
-    }
+    // Import the fallback image path from the package
+    return require('@sparklane.dev/sparklane-recipecard-react/dist/no-image.jpg');
   } catch {
-    // If any of the above fails, fall back to data URI
+    // Fallback to a simple data URI
+    return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=';
   }
-  
-  return fallbackDataUri;
 };
 
 export interface RecipeCardProps {
