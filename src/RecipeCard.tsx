@@ -137,9 +137,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
     const emptyStars = STAR_COUNT - fullStars - (hasHalfStar ? 1 : 0);
 
-    for (let i = 0; i < emptyStars; i++) {
+    for (let j = 0; j < emptyStars; j++) {
       stars.push(
-        <span key={`empty-${i}`} className="star empty">
+        <span key={`empty-${j}`} className="star empty">
           ☆
         </span>
       );
