@@ -21,7 +21,7 @@ A reusable React component for displaying recipe cards with name, image, and rat
 ## Installation
 
 ```bash
-npm install sparklane-recipecard-react
+npm --% install @sparklane.dev/sparklane-recipecard-react
 ```
 
 ## Usage
