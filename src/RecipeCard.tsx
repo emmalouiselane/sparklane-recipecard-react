@@ -6,51 +6,9 @@ const MAX_RATING = 5;
 const DEFAULT_STAR_COLOR = '#fbbf24';
 const STAR_COUNT = 5;
 
-// Helper function to validate image URLs for security
-const isValidImageUrl = (url: string): boolean => {
-  if (!url || typeof url !== 'string') return false;
-  
-  try {
-    const parsedUrl = new URL(url, window.location.origin);
-    
-    // Allow only http, https, and data URLs
-    const allowedProtocols = ['http:', 'https:', 'data:'];
-    if (!allowedProtocols.includes(parsedUrl.protocol)) {
-      return false;
-    }
-    
-    // For data URLs, allow only image formats
-    if (parsedUrl.protocol === 'data:') {
-      return url.startsWith('data:image/');
-    }
-        
-    return true;
-  } catch {
-    // Invalid URL format
-    return false;
-  }
-};
-
-// Helper function to get the correct fallback image path
-const getFallbackImagePath = (): string => {
-  // For development, use public folder path
-  if (process.env.NODE_ENV === 'development') {
-    return '/no-image.jpg';
-  }
-  
-  // For production, use the bundled image from node_modules
-  try {
-    // Import the fallback image path from the package
-    return require('@sparklane.dev/sparklane-recipecard-react/dist/no-image.jpg');
-  } catch {
-    // Fallback to a simple data URI
-    return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=';
-  }
-};
-
 export interface RecipeCardProps {
   name: string;
-  image: string;
+  image: React.ReactElement<HTMLImageElement>;
   rating: number | null;
   // Optional props
   recipeCardOverrideClassName?: string;
@@ -76,7 +34,7 @@ export interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({ 
   name, 
   image, 
-  rating, 
+  rating,
 
   //Optional props with defaults
   recipeCardOverrideClassName,
@@ -111,9 +69,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     const fullStars = Math.floor(rating!);
     const hasHalfStar = rating! % 1 !== 0;
 
-    for (let i = 0; i < fullStars; i++) {
+    for (let starIndex = 0; starIndex < fullStars; starIndex++) {
       stars.push(
-        <span key={`full-${i}`} className="star full">
+        <span key={`full-${starIndex}`} className="star full">
           ★
         </span>
       );
@@ -129,9 +87,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
     const emptyStars = STAR_COUNT - fullStars - (hasHalfStar ? 1 : 0);
 
-    for (let j = 0; j < emptyStars; j++) {
+    for (let emptyStarIndex = 0; emptyStarIndex < emptyStars; emptyStarIndex++) {
       stars.push(
-        <span key={`empty-${j}`} className="star empty">
+        <span key={`empty-${emptyStarIndex}`} className="star empty">
           ☆
         </span>
       );
@@ -158,8 +116,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     );
   }
 
-  if (!image || typeof image !== 'string') {
-    console.error('RecipeCard: image prop is required and must be a string');
+  if (!image) {
+    console.error('RecipeCard: image prop is required');
     return (
       <div className="recipe-card-error" style={{
         padding: '20px',
@@ -173,6 +131,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         <p>Recipe image is required.</p>
       </div>
     );
+  }
+
+  // Validate string URLs (but not img elements)
+  if (!image) {
+    console.warn('RecipeCard: image is required');
   }
 
   if (rating !== null && (typeof rating !== 'number' || rating < 0 || rating > MAX_RATING)) {
@@ -195,22 +158,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   return (
     <article className={recipeCardOverrideClassName || "recipe-card"} aria-labelledby={`recipe-name-${name.replace(/\s+/g, '-').toLowerCase()}`}>
       <div className="recipe-image-container">
-        <img 
-          src={isValidImageUrl(image) ? image : getFallbackImagePath()} 
-          alt={name} 
-          className="recipe-image"
-          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            const target = e.currentTarget;
-            target.src = getFallbackImagePath();
-            target.alt = `Image not available for ${name}`;
-            // Update the parent article's aria-labelledby to reflect the image state
-            const articleElement = target.closest('article');
-            if (articleElement) {
-              const recipeNameId = `recipe-name-${name.replace(/\s+/g, '-').toLowerCase()}`;
-              articleElement.setAttribute('aria-describedby', `${recipeNameId} image-error`);
-            }
-          }}
-        />
+        {image}
       </div>
       <div className="recipe-content">
         <h3 className="recipe-name" id={`recipe-name-${name.replace(/\s+/g, '-').toLowerCase()}`}>{name}</h3>

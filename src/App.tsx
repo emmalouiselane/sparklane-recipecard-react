@@ -16,25 +16,25 @@ function App() {
           <div className="demo-grid">
             <RecipeCard
               name="Classic Chocolate Chip Cookies"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Chocolate chip cookies" />}
               rating={4}
             />
             
             <RecipeCard
               name="Perfect Pasta Primavera"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Pasta primavera" />}
               rating={4.5}
             />
             
             <RecipeCard
               name="Creamy Mushroom Risotto"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Mushroom risotto" />}
               rating={0}
             />
             
             <RecipeCard
               name="Margherita Pizza"
-              image="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=300&h=200&fit=crop"
+              image={<img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=300&h=200&fit=crop" alt="Margherita Pizza" />}
               rating={null}
             />
           </div>
@@ -45,7 +45,7 @@ function App() {
           <div className="demo-grid">
             <RecipeCard
               name="Custom Empty Rating"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Custom empty rating" />}
               rating={null}
               emptyRatingPlaceholderText="No reviews yet"
               emptyRatingClassName="custom-empty"
@@ -53,7 +53,7 @@ function App() {
             
             <RecipeCard
               name="Custom Zero Rating"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Custom zero rating" />}
               rating={0}
               zeroRatingPlaceholderText="Needs improvement!"
               zeroRatingClassName="custom-zero"
@@ -61,21 +61,21 @@ function App() {
             
             <RecipeCard
               name="Custom Recipe Card Override"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Custom recipe card override" />}
               rating={4.5}
               recipeCardOverrideClassName="custom-recipe-card"
             />
             
             <RecipeCard
               name="Custom Star Rating Color"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Custom star rating color" />}
               rating={4.5}
               starRatingColor="#ff6b35"
             />
             
             <RecipeCard
               name="Custom Recipe Button"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Custom recipe button" />}
               rating={4.5}
               showRatingNumber={false}
               showRecipeButton={true}
@@ -85,7 +85,7 @@ function App() {
             
             <RecipeCard
               name="Advanced Custom Template"
-              image="/no-image.jpg"
+              image={<img src="/no-image.jpg" alt="Advanced custom template" />}
               rating={null}
               advancedCustomContainer={true}
               advancedCustomContainerContent={

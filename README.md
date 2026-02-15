@@ -13,7 +13,7 @@ A reusable React component for displaying recipe cards with name, image, and rat
 - 🔘 Optional recipe button with custom handler
 - 🧩 Advanced custom container support
 - ♿ WCAG AA compliant accessibility features
-- 🔒 Built-in security with URL validation
+- �️ Accepts complete img elements for full control
 - 🛡️ Comprehensive error handling and validation
 - 🎯 Error boundary protection
 - 📦 Proper npm package structure
@@ -33,7 +33,13 @@ function App() {
   return (
       <RecipeCard
         name="Your Recipe Name"
-        image="https://example.com/image.jpg"
+        image={
+          <img 
+            src="https://example.com/image.jpg"
+            alt="Your Recipe Name"
+            loading="lazy"
+          />
+        }
         rating={4.5}
       />
   );
@@ -45,7 +51,7 @@ function App() {
 ### Required Props
 
 - `name` (string): The recipe name
-- `image` (string): URL to the recipe image (supports http, https, and data URLs)
+- `image` (React.ReactElement<HTMLImageElement>): A complete `<img>` element for the recipe image
 - `rating` (number | null): Recipe rating (0-5) or null for unrated
 
 ### Optional Props
@@ -69,7 +75,6 @@ The component includes comprehensive error handling:
 
 ### Built-in Validation
 - **Prop Validation**: Automatically validates required props and shows user-friendly error messages
-- **URL Security**: Validates image URLs to prevent XSS attacks (only allows http, https, and data URLs)
 - **Rating Bounds**: Ensures rating values are within valid range (0-5)
 
 ## Examples
@@ -79,7 +84,12 @@ The component includes comprehensive error handling:
 ```tsx
 <RecipeCard
   name="Classic Chocolate Chip Cookies"
-  image="https://example.com/cookies.jpg"
+  image={
+    <img 
+      src="https://example.com/cookies.jpg"
+      alt="Classic Chocolate Chip Cookies"
+    />
+  }
   rating={4}
 />
 ```
@@ -89,7 +99,13 @@ The component includes comprehensive error handling:
 ```tsx
 <RecipeCard
   name="Custom Recipe"
-  image="https://example.com/recipe.jpg"
+  image={
+    <img 
+      src="https://example.com/recipe.jpg"
+      alt="Custom Recipe"
+      style={{ borderRadius: '8px', border: '2px solid #fbbf24' }}
+    />
+  }
   rating={null}
   emptyRatingPlaceholderText="No reviews yet"
   emptyRatingClassName="text-gray-500 italic"
@@ -101,7 +117,13 @@ The component includes comprehensive error handling:
 ```tsx
 <RecipeCard
   name="Recipe with Button"
-  image="https://example.com/recipe.jpg"
+  image={
+    <img 
+      src="https://example.com/recipe.jpg"
+      alt="Recipe with Button"
+      loading="lazy"
+    />
+  }
   rating={4.5}
   showRecipeButton={true}
   recipeButtonClassName="btn btn-primary"
@@ -114,7 +136,12 @@ The component includes comprehensive error handling:
 ```tsx
 <RecipeCard
   name="Custom Star Color"
-  image="https://example.com/recipe.jpg"
+  image={
+    <img 
+      src="https://example.com/recipe.jpg"
+      alt="Custom Star Color"
+    />
+  }
   rating={4.5}
   starRatingColor="#ff6b35"
 />
@@ -125,7 +152,12 @@ The component includes comprehensive error handling:
 ```tsx
 <RecipeCard
   name="Custom Layout"
-  image="https://example.com/recipe.jpg"
+  image={
+    <img 
+      src="https://example.com/recipe.jpg"
+      alt="Custom Layout"
+    />
+  }
   rating={null}
   advancedCustomContainer={true}
   advancedCustomContainerContent={
@@ -193,26 +225,80 @@ import RecipeCard, { RecipeCardProps } from 'sparklane-recipecard-react';
 // Use the interface for type safety
 const recipeData: RecipeCardProps = {
   name: "My Recipe",
-  image: "https://example.com/image.jpg",
+  image: (
+    <img 
+      src="https://example.com/image.jpg"
+      alt="My Recipe"
+    />
+  ),
   rating: 4.5
 };
+```
+
+## Image Customization
+
+The component accepts complete `<img>` elements, giving you full control over image attributes:
+
+- **src**: Image source URL
+- **alt**: Alt text for accessibility (falls back to recipe name if not provided)
+- **loading**: Lazy loading ("lazy", "eager")
+- **style**: Inline styles for custom appearance
+- **onError**: Custom error handling
+- **className**: Additional CSS classes
+- **All other img attributes**: width, height, crossOrigin, etc.
+
+### Image Examples
+
+```tsx
+// Basic image
+<RecipeCard
+  name="Recipe"
+  image={<img src="/image.jpg" alt="Recipe" />}
+  rating={4}
+/>
+
+// Image with custom styling and lazy loading
+<RecipeCard
+  name="Styled Recipe"
+  image={
+    <img 
+      src="/image.jpg" 
+      alt="Styled Recipe"
+      loading="lazy"
+      style={{ borderRadius: '12px', border: '3px solid #fbbf24' }}
+    />
+  }
+  rating={4.5}
+/>
+
+// Image with custom error handling
+<RecipeCard
+  name="Recipe with Fallback"
+  image={
+    <img 
+      src="/potentially-broken-url.jpg" 
+      alt="Recipe with Fallback"
+      onError={(e) => {
+        e.currentTarget.src = '/fallback-image.jpg';
+      }}
+    />
+  }
+  rating={3}
+/>
 ```
 
 ## Security Features
 
 The component includes several security measures:
 
-- **URL Validation**: Only allows safe image URLs (http, https, data protocols)
-- **XSS Prevention**: Validates and sanitizes image sources
-- **Safe Fallbacks**: Uses secure fallback images when URLs fail
 - **Input Validation**: Validates all props to prevent injection attacks
+- **Safe Fallbacks**: Uses secure fallback handling when needed
 
 ## Performance Optimizations
 
 - **Memoized Star Rendering**: Uses React.useMemo for efficient star calculations
 - **Optimized Re-renders**: Only re-renders when props actually change
 - **Lazy Error Handling**: Error boundaries don't impact normal performance
-- **Efficient Image Loading**: Validates URLs before loading to prevent unnecessary requests
 
 ## License
 

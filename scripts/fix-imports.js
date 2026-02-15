@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// Fix the index.js file to include .js extension in imports
+// Fix index.js file to include .js extension in imports
 const indexPath = path.join(__dirname, '../dist/index.js');
 if (fs.existsSync(indexPath)) {
   let content = fs.readFileSync(indexPath, 'utf8');
