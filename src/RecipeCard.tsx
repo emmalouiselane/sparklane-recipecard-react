@@ -8,7 +8,7 @@ const STAR_COUNT = 5;
 
 export interface RecipeCardProps {
   name: string;
-  image: React.ReactElement<HTMLImageElement>;
+  image: React.ReactElement;
   rating: number | null;
   // Optional props
   recipeCardOverrideClassName?: string;
@@ -50,55 +50,54 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   advancedCustomContainer = false,
   advancedCustomContainerContent = null
 }) => {
-  // Helper functions (must be defined before hooks)
   const isValidRating = (rating: number | null): boolean => {
     return rating !== null && rating >= 0 && rating <= MAX_RATING;
   };
-
   const isZeroRating = (rating: number | null): boolean => {
     return rating === 0;
   };
-
-  // Hooks must be called before any conditional returns
+  const isValidImage = (image: React.ReactElement): boolean => {
+    return React.isValidElement(image);
+  };
+  const createStarElements = (count: number, type: 'full' | 'empty', symbol: string, startIndex: number = 0): React.ReactElement[] => {
+    const elements: React.ReactElement[] = [];
+    for (let index = 0; index < count; index++) {
+      elements.push(
+        <span key={`${type}-star-${startIndex + index}`} className={`star ${type}`}>
+          {symbol}
+        </span>
+      );
+    }
+    return elements;
+  };
   const stars = React.useMemo(() => {
     if (!isValidRating(rating)) {
       return [];
     }
 
-    const stars = [];
+    const stars: React.ReactElement[] = [];
     const fullStars = Math.floor(rating!);
     const hasHalfStar = rating! % 1 !== 0;
 
-    for (let starIndex = 0; starIndex < fullStars; starIndex++) {
-      stars.push(
-        <span key={`full-${starIndex}`} className="star full">
-          ★
-        </span>
-      );
-    }
+    // Add full stars
+    stars.push(...createStarElements(fullStars, 'full', '★', 0));
 
+    // Add half star if needed
     if (hasHalfStar) {
       stars.push(
-        <span key="half" className="star half">
+        <span key="half-star" className="star half">
           ★
         </span>
       );
     }
 
+    // Add empty stars
     const emptyStars = STAR_COUNT - fullStars - (hasHalfStar ? 1 : 0);
-
-    for (let emptyStarIndex = 0; emptyStarIndex < emptyStars; emptyStarIndex++) {
-      stars.push(
-        <span key={`empty-${emptyStarIndex}`} className="star empty">
-          ☆
-        </span>
-      );
-    }
+    stars.push(...createStarElements(emptyStars, 'empty', '☆', fullStars + (hasHalfStar ? 1 : 0)));
 
     return stars;
   }, [rating]);
 
-  // Input validation (after hooks)
   if (!name || typeof name !== 'string') {
     console.error('RecipeCard: name prop is required and must be a string');
     return (
@@ -116,8 +115,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     );
   }
 
-  if (!image) {
-    console.error('RecipeCard: image prop is required');
+  if (!image || !isValidImage(image)) {
+    console.error('RecipeCard: image prop is required and must be a valid React element');
     return (
       <div className="recipe-card-error" style={{
         padding: '20px',
@@ -128,14 +127,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         textAlign: 'center'
       }}>
         <h3>Invalid Recipe</h3>
-        <p>Recipe image is required.</p>
+        <p>Recipe image is required and must be a valid React element.</p>
       </div>
     );
-  }
-
-  // Validate string URLs (but not img elements)
-  if (!image) {
-    console.warn('RecipeCard: image is required');
   }
 
   if (rating !== null && (typeof rating !== 'number' || rating < 0 || rating > MAX_RATING)) {

@@ -110,7 +110,7 @@ function App() {
   return (
       <RecipeCard
         name="Your Recipe Name"
-        image="https://example.com/image.jpg"
+        image={<img src="https://example.com/image.jpg" alt="Your recipe name" />}
         rating={4.5}
         // Optional props
         emptyRatingPlaceholderText="Not rated (yet!)"
